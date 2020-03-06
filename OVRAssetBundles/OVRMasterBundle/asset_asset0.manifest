@@ -1,0 +1,45 @@
+ManifestFileVersion: 0
+CRC: 2536330031
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 07dde80c7f7160d7a97caaba4f9fd48b
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: fcb56a00d36111ff0fa9c3a6e516c68b
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 72
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: adb84e30e02715445aeb9959894e3b4d, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 48a79b01ea5641d4aa6daa2e23605641, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: b94fcd11afffcb142908bfcb1e261fba, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 556797029e73b2347956b6579e77e05b, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 8e6292b2c06870d4495f009f912b9600, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 40b924e2dad56384a8df2a1e111bb675, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 30f4b897495c7ad40b2d47143e02aaba, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: c1cb7e9e120078f43bce4f0b1be547a7, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+Assets:
+- Packages/com.unity.postprocessing/PostProcessing/PostProcessResources.asset
+- Assets/Settings/PostProcessVolumeProfile.asset
+Dependencies:
+- F:/Henigma/TheCell01/TheCell/OVRAssetBundles/OVRMasterBundle/asset_png0
+- F:/Henigma/TheCell01/TheCell/OVRAssetBundles/OVRMasterBundle/asset_png1
+- F:/Henigma/TheCell01/TheCell/OVRAssetBundles/OVRMasterBundle/asset_png2
+- F:/Henigma/TheCell01/TheCell/OVRAssetBundles/OVRMasterBundle/asset_shader0
+- F:/Henigma/TheCell01/TheCell/OVRAssetBundles/OVRMasterBundle/asset_compute0
+- F:/Henigma/TheCell01/TheCell/OVRAssetBundles/OVRMasterBundle/asset_tga0

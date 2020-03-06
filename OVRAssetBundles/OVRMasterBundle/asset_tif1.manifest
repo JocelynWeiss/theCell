@@ -1,0 +1,29 @@
+ManifestFileVersion: 0
+CRC: 3199096761
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 91b1b688961d26481696d2ee4d0d6ab7
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 2ed26e3ad9f6be9c24f85f5f5b54339d
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+Assets:
+- Assets/ExampleAssets/Textures/Concrete/Ground_Normal.tif
+- Assets/ExampleAssets/Textures/Plastic/Plastic_Normal.tif
+- Assets/ExampleAssets/Textures/Drywall/Drywall_AlbedoSmoothness.tif
+- Assets/ExampleAssets/Textures/Wood/OBS_Albedo.tif
+- Assets/ExampleAssets/Textures/Plastic/Elastic_Normal.tif
+- Assets/ExampleAssets/Textures/Props/HardHat/SafetyHat_Normal.tif
+- Assets/ExampleAssets/Textures/Wood/OBS_Normal.tif
+- Assets/ExampleAssets/Textures/Concrete/Ground_Albedo.tif
+- Assets/ExampleAssets/Textures/Props/HardHat/SafetyHat_MetallicOcculusionSmoothness.tif
+- Assets/ExampleAssets/Textures/Props/HardHat/SafetyHat_Albedo.tif
+- Assets/ExampleAssets/Textures/Props/Paint/Paint1G_MetallicOcculusionSmoothness.tif
+- Assets/ExampleAssets/Textures/Metal/Metal_Normal.tif
+- Assets/ExampleAssets/Textures/Props/Jigsaw/Jigsaw_MetallicOcculusionSmoothness.tif
+- Assets/ExampleAssets/Textures/Props/Paint/Paintbrush_Normal.tif
+Dependencies: []

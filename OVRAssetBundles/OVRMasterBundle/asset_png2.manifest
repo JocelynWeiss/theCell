@@ -1,0 +1,28 @@
+ManifestFileVersion: 0
+CRC: 3864140200
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 959e3217590cf66f9ba9cbafd5af6f73
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 2ed26e3ad9f6be9c24f85f5f5b54339d
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+Assets:
+- Packages/com.unity.postprocessing/PostProcessing/Textures/Blue Noise 64px/LDR_LLL1_17.png
+- Packages/com.unity.postprocessing/PostProcessing/Textures/Blue Noise 64px/LDR_LLL1_9.png
+- Packages/com.unity.postprocessing/PostProcessing/Textures/Blue Noise 64px/LDR_LLL1_18.png
+- Packages/com.unity.postprocessing/PostProcessing/Textures/Blue Noise 64px/LDR_LLL1_57.png
+- Packages/com.unity.postprocessing/PostProcessing/Textures/Blue Noise 64px/LDR_LLL1_7.png
+- Packages/com.unity.postprocessing/PostProcessing/Textures/Blue Noise 64px/LDR_LLL1_46.png
+- Packages/com.unity.postprocessing/PostProcessing/Textures/Blue Noise 64px/LDR_LLL1_60.png
+- Packages/com.unity.postprocessing/PostProcessing/Textures/Blue Noise 64px/LDR_LLL1_11.png
+- Packages/com.unity.postprocessing/PostProcessing/Textures/Blue Noise 64px/LDR_LLL1_52.png
+- Packages/com.unity.postprocessing/PostProcessing/Textures/Blue Noise 64px/LDR_LLL1_26.png
+- Packages/com.unity.postprocessing/PostProcessing/Textures/Blue Noise 64px/LDR_LLL1_22.png
+- Packages/com.unity.postprocessing/PostProcessing/Textures/Blue Noise 64px/LDR_LLL1_39.png
+- Packages/com.unity.postprocessing/PostProcessing/Textures/Blue Noise 64px/LDR_LLL1_56.png
+Dependencies: []
