@@ -58,12 +58,23 @@ public class TheCellGameMgr : MonoBehaviour
     public List<OneCellClass> allCells; // All the cells as they are distributed
     public List<int> lookupTab = new List<int>(25); // lookup table, hold a map of cell's id
     int playerCellId = 12; // in which place on the chess the player is. Match the lookup table.
+    GameObject playerSphere = null; // a sphere to represent where the player is on the board.
 
 
     void Awake()
     {
         Debug.Log($"[GameMgr] Awake. {gameState}");
-        transform.position = new Vector3(5.0f, 0.5f, 2.0f);
+        //transform.position = new Vector3(-2.0f, 0.5f, 2.0f);
+        transform.position = new Vector3(0.0f, 0.0f, 5.0f);
+
+        // add a sphere to represent the player     
+        if (playerSphere == null)
+        {
+            playerSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            playerSphere.transform.position = transform.position + new Vector3(0.0f, 1.0f, 0.0f);
+            playerSphere.transform.localScale = new Vector3(0.5f, 0.8f, 0.5f);
+        }
+
         InitializeNewGame(startingSeed); // for debug purpose we always start with the same seed
         //InitializeNewGame(System.Environment.TickCount);
     }
@@ -156,6 +167,7 @@ public class TheCellGameMgr : MonoBehaviour
                 if (allCells.Count == 25)
                 {
                     cell = allCells[id];
+                    lookupTab[id] = id;
                 }
                 else
                 {
@@ -173,6 +185,7 @@ public class TheCellGameMgr : MonoBehaviour
                 if ((i == 2) && (j == 2))
                 {
                     cell.InitCell(CellTypes.Start, aRndNb);
+                    playerSphere.transform.position = cell.transform.position + new Vector3(0.0f, 1.0f, 0.0f);
                     continue;
                 }
 
@@ -272,6 +285,13 @@ public class TheCellGameMgr : MonoBehaviour
     private void FixedUpdate()
     {
         //Debug.Log($"[GameMgr][{Time.fixedTime - startingTime}]");
+
+        // always update the player pos
+        OneCellClass current = GetCurrentCell();
+        if (current != null)
+        {
+            playerSphere.transform.position = current.transform.position + new Vector3(0.0f, 1.0f, 0.0f);
+        }
     }
 
 
@@ -316,12 +336,11 @@ public class TheCellGameMgr : MonoBehaviour
 
         OneCellClass current = GetCurrentCell();
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(current.transform.position, current.transform.localScale * 0.8f);
+        Gizmos.DrawWireCube(current.transform.position, current.transform.localScale * 0.01f);
     }
 
 
     // Move an entire row to the right
-    // JowNext: change positions
     void MoveRow(int from)
     {
         List<int> row = new List<int>(5);
@@ -335,6 +354,13 @@ public class TheCellGameMgr : MonoBehaviour
         lookupTab[from + 2] = row[1];
         lookupTab[from + 3] = row[2];
         lookupTab[from + 4] = row[3];
+
+        float z = from%4;
+        for (int j = 0; j < 5; ++j)
+        {
+            float x = j;
+            allCells[lookupTab[from + j]].transform.SetPositionAndRotation(new Vector3(x, 0.0f, z * -1.0f) + transform.position, Quaternion.identity);
+        }
     }
 
 

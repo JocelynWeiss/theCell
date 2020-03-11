@@ -35,6 +35,10 @@ public class OneCellClass : MonoBehaviour
         cellType = type;
         cellRndSource = rnd;
         gameObject.SetActive(true);
+
+        MeshRenderer renderer = gameObject.GetComponent<MeshRenderer>();
+        renderer.material.color = GetColorByType();
+        transform.localScale = new Vector3(80.0f, 80.0f, 80.0f);
     }
 
 
@@ -45,29 +49,39 @@ public class OneCellClass : MonoBehaviour
     }
 
 
-    protected void OnDrawGizmos()
+    Color GetColorByType()
     {
-        switch(cellType)
+        Color ret = Color.black;
+        switch (cellType)
         {
             case TheCellGameMgr.CellTypes.Undefined:
             case TheCellGameMgr.CellTypes.Start:
-                Gizmos.color = Color.green;
+                ret = Color.green;
                 break;
             case TheCellGameMgr.CellTypes.Exit:
-                Gizmos.color = Color.cyan;
+                ret = Color.cyan;
                 break;
             case TheCellGameMgr.CellTypes.Safe:
-                Gizmos.color = Color.blue;
+                ret = Color.blue;
                 break;
             case TheCellGameMgr.CellTypes.Effect:
-                Gizmos.color = Color.yellow;
+                ret = Color.yellow;
                 break;
             default:
-                Gizmos.color = Color.red;
+                ret = Color.red;
                 break;
         }
+        ret.a = 0.5f;
+        return ret;
+    }
 
-        float size = 0.8f;
+
+    // Draw gizmos in editor view
+    protected void OnDrawGizmos()
+    {
+        Gizmos.color = GetColorByType();
+
+        float size = 0.01f;
         bool wire = false;
         if (wire)
         {
@@ -75,7 +89,7 @@ public class OneCellClass : MonoBehaviour
         }
         else
         {
-            Gizmos.color = Gizmos.color * new Color(1.0f, 1.0f, 1.0f, 0.5f);
+            //Gizmos.color = Gizmos.color * new Color(1.0f, 1.0f, 1.0f, 0.5f);
             Gizmos.DrawCube(transform.position, transform.localScale * size);
         }
     }
