@@ -226,6 +226,68 @@ public class TheCellGameMgr : MonoBehaviour
     }
 
 
+    // Move the player position on the board to the north +Z
+    void MovePlayerNorth()
+    {
+        if (playerCellId > 4)
+        {
+            playerCellId -= 5;
+        }
+    }
+
+
+    // Move the player position on the board to the south -Z
+    void MovePlayerSouth()
+    {
+        if (playerCellId < 20)
+        {
+            playerCellId += 5;
+        }
+    }
+
+
+    // Move the player position on the board to the north +X
+    void MovePlayerEast()
+    {
+        if (playerCellId % 5 == 4)
+        {
+            return;
+        }
+        playerCellId++;
+    }
+
+
+    // Move the player position on the board to the north -X
+    void MovePlayerWest()
+    {
+        if (playerCellId % 5 == 0)
+        {
+            return;
+        }
+        playerCellId--;
+    }
+
+
+    // Make sure the player is in the correct cell
+    void SetPlayerLookupId(int cellId)
+    {
+        OneCellClass current = GetCurrentCell();
+        int currentCellId = current.cellId;
+        if (currentCellId != cellId)
+        {
+            int i = 0;
+            foreach (int id in lookupTab)
+            {
+                if (id == cellId)
+                {
+                    playerCellId = i;
+                }
+                i++;
+            }
+        }
+    }
+
+
     // Update is called once per frame
     void Update()
     {
@@ -244,38 +306,32 @@ public class TheCellGameMgr : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.UpArrow))
         {
-            if (playerCellId > 4)
-            {
-                playerCellId -= 5;
-            }
+            MovePlayerNorth();
         }
         if (Input.GetKeyUp(KeyCode.DownArrow))
         {
-            if (playerCellId < 20)
-            {
-                playerCellId += 5;
-            }
+            MovePlayerSouth();
         }
         if (Input.GetKeyUp(KeyCode.RightArrow))
         {
-            if (playerCellId % 5 == 4)
-            {
-                return;
-            }
-            playerCellId++;
+            MovePlayerEast();
         }
         if (Input.GetKeyUp(KeyCode.LeftArrow))
         {
-            if (playerCellId % 5 == 0)
-            {
-                return;
-            }
-            playerCellId--;
+            MovePlayerWest();
         }
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (Input.GetKeyUp(KeyCode.Keypad6))
         {
             TestGetNorth();
-            MoveRow(5);
+            int from = playerCellId / 5 * 5;
+            MoveRow(from, true);
+            TestGetNorth();
+        }
+        if (Input.GetKeyUp(KeyCode.Keypad4))
+        {
+            TestGetNorth();
+            int from = playerCellId / 5 * 5;
+            MoveRow(from, false);
             TestGetNorth();
         }
     }
@@ -284,7 +340,7 @@ public class TheCellGameMgr : MonoBehaviour
     // called once per fixed framerate
     private void FixedUpdate()
     {
-        //Debug.Log($"[GameMgr][{Time.fixedTime - startingTime}]");
+        //Debug.Log($"[GameMgr][{Time.fixedTime - startingTime}s]");
 
         // always update the player pos
         OneCellClass current = GetCurrentCell();
@@ -298,7 +354,7 @@ public class TheCellGameMgr : MonoBehaviour
     private void OnDestroy()
     {
         Cleanup();
-        //Debug.Log($"[GameMgr][{Time.fixedTime - startingTime}] DESTROY !!!");
+        //Debug.Log($"[GameMgr][{Time.fixedTime - startingTime}s] DESTROY !!!");
     }
 
 
@@ -341,26 +397,47 @@ public class TheCellGameMgr : MonoBehaviour
 
 
     // Move an entire row to the right
-    void MoveRow(int from)
+    void MoveRow(int from, bool onEast)
     {
+        if ((from != 0) && (from != 5) && (from != 15) && (from != 20))
+        {
+            Debug.Log($"[GameMgr][{Time.fixedTime - startingTime}s] MoveRow should start from the beginning of a row not {from}.");
+            return;
+        }
+
+        int currentCellId = lookupTab[playerCellId];
         List<int> row = new List<int>(5);
         for (int i=0; i < 5; ++i)
         {
             row.Add(lookupTab[from + i]);
         }
 
-        lookupTab[from + 0] = row[4];
-        lookupTab[from + 1] = row[0];
-        lookupTab[from + 2] = row[1];
-        lookupTab[from + 3] = row[2];
-        lookupTab[from + 4] = row[3];
+        if (onEast)
+        {
+            lookupTab[from + 0] = row[4];
+            lookupTab[from + 1] = row[0];
+            lookupTab[from + 2] = row[1];
+            lookupTab[from + 3] = row[2];
+            lookupTab[from + 4] = row[3];
+        }
+        else
+        {
+            lookupTab[from + 0] = row[1];
+            lookupTab[from + 1] = row[2];
+            lookupTab[from + 2] = row[3];
+            lookupTab[from + 3] = row[4];
+            lookupTab[from + 4] = row[0];
+        }
 
-        float z = from%4;
+        float z = from / 5;
         for (int j = 0; j < 5; ++j)
         {
             float x = j;
             allCells[lookupTab[from + j]].transform.SetPositionAndRotation(new Vector3(x, 0.0f, z * -1.0f) + transform.position, Quaternion.identity);
         }
+
+        // reposition the player
+        SetPlayerLookupId(currentCellId);
     }
 
 
