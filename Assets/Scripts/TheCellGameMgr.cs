@@ -334,6 +334,16 @@ public class TheCellGameMgr : MonoBehaviour
             MoveRow(from, false);
             TestGetNorth();
         }
+        if (Input.GetKeyUp(KeyCode.Keypad8))
+        {
+            int from = playerCellId % 5;
+            MoveColumn(from, true);
+        }
+        if (Input.GetKeyUp(KeyCode.Keypad2))
+        {
+            int from = playerCellId % 5;
+            MoveColumn(from, false);
+        }
     }
 
 
@@ -396,7 +406,7 @@ public class TheCellGameMgr : MonoBehaviour
     }
 
 
-    // Move an entire row to the right
+    // Move an entire row to the east or west
     void MoveRow(int from, bool onEast)
     {
         if ((from != 0) && (from != 5) && (from != 15) && (from != 20))
@@ -458,5 +468,50 @@ public class TheCellGameMgr : MonoBehaviour
             }
         }
         Debug.Log($"[GameMgr] north of 10 -> {msg}");
+    }
+
+
+    // Move an entire column to the north or south
+    void MoveColumn(int from, bool onNorth)
+    {
+        if ((from != 0) && (from != 1) && (from != 3) && (from != 4))
+        {
+            Debug.Log($"[GameMgr][{Time.fixedTime - startingTime}s] MoveColumn should start from the beginning of a column not {from}.");
+            return;
+        }
+
+        int currentCellId = lookupTab[playerCellId];
+        List<int> column = new List<int>(5);
+        for (int i = 0; i < 5; ++i)
+        {
+            column.Add(lookupTab[from + i * 5]);
+        }
+
+        if (onNorth)
+        {
+            lookupTab[from + 0] = column[1];
+            lookupTab[from + 5] = column[2];
+            lookupTab[from + 10] = column[3];
+            lookupTab[from + 15] = column[4];
+            lookupTab[from + 20] = column[0];
+        }
+        else
+        {
+            lookupTab[from + 0] = column[4];
+            lookupTab[from + 5] = column[0];
+            lookupTab[from + 10] = column[1];
+            lookupTab[from + 15] = column[2];
+            lookupTab[from + 20] = column[3];
+        }
+
+        float x = from;
+        for (int j = 0; j < 5; ++j)
+        {
+            float z = j;
+            allCells[lookupTab[from + j * 5]].transform.SetPositionAndRotation(new Vector3(x, 0.0f, z * -1.0f) + transform.position, Quaternion.identity);
+        }
+
+        // reposition the player
+        SetPlayerLookupId(currentCellId);
     }
 }
