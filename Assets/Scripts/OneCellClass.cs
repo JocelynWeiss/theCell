@@ -9,6 +9,7 @@ public class OneCellClass : MonoBehaviour
     [ViewOnly] public TheCellGameMgr.CellTypes cellType = TheCellGameMgr.CellTypes.Undefined;
     [ViewOnly] public TheCellGameMgr.CellSubTypes cellSubType = TheCellGameMgr.CellSubTypes.Empty;
     public float cellRndSource; // A random number set at init [0..1]
+    public float enterTime { get; private set; }
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +25,7 @@ public class OneCellClass : MonoBehaviour
 
 
     // Initialize the cell
-    public void InitCell(TheCellGameMgr.CellTypes type, float rnd)
+    public void InitCell(TheCellGameMgr.CellTypes type, int subId, float rnd)
     {
         if (type == TheCellGameMgr.CellTypes.Undefined)
         {
@@ -34,6 +35,38 @@ public class OneCellClass : MonoBehaviour
 
         cellType = type;
         cellRndSource = rnd;
+
+        switch (type)
+        {
+            case TheCellGameMgr.CellTypes.Deadly:
+                {
+                    if ((subId == 0) || (subId == 1))
+                        cellSubType = TheCellGameMgr.CellSubTypes.Fire;
+                    if ((subId == 2) || (subId == 3))
+                        cellSubType = TheCellGameMgr.CellSubTypes.Gaz;
+                    if ((subId == 4) || (subId == 5))
+                        cellSubType = TheCellGameMgr.CellSubTypes.Water;
+                    if ((subId == 6) || (subId == 7))
+                        cellSubType = TheCellGameMgr.CellSubTypes.Lasers;
+                    if (subId == 8)
+                        cellSubType = TheCellGameMgr.CellSubTypes.Illusion;
+                    break;
+                }
+            case TheCellGameMgr.CellTypes.Effect:
+                if ((subId == 0) || (subId == 1))
+                    cellSubType = TheCellGameMgr.CellSubTypes.Blind;
+                if ((subId == 2) || (subId == 3))
+                    cellSubType = TheCellGameMgr.CellSubTypes.OneLook;
+                if ((subId == 4) || (subId == 5))
+                    cellSubType = TheCellGameMgr.CellSubTypes.Vortex;
+                if (subId == 6)
+                    cellSubType = TheCellGameMgr.CellSubTypes.Screen;
+                break;
+            default:
+                cellSubType = TheCellGameMgr.CellSubTypes.Empty;
+                break;
+        }
+
         gameObject.SetActive(true);
 
         MeshRenderer renderer = gameObject.GetComponent<MeshRenderer>();
@@ -92,5 +125,39 @@ public class OneCellClass : MonoBehaviour
             //Gizmos.color = Gizmos.color * new Color(1.0f, 1.0f, 1.0f, 0.5f);
             Gizmos.DrawCube(transform.position, transform.localScale * size);
         }
+    }
+
+
+    // Player just exited this cell
+    public void OnPlayerExit()
+    {
+        
+    }
+
+
+    // Player just enter this cell
+    public void OnPlayerEnter()
+    {
+        enterTime = Time.fixedTime;
+
+        switch (cellSubType)
+        {
+            case TheCellGameMgr.CellSubTypes.Lasers:
+            case TheCellGameMgr.CellSubTypes.Fire:
+            case TheCellGameMgr.CellSubTypes.Gaz:
+            case TheCellGameMgr.CellSubTypes.Water:
+                StartCoroutine(DelayedDeath());
+                break;
+            default:
+                break;
+        }
+    }
+
+
+    private IEnumerator DelayedDeath()
+    {
+        yield return new WaitForSecondsRealtime(3.0f);
+
+        Debug.Log($"[OneCellClass] Kill the player sub {cellSubType}, go back at start. DeathTime = {Time.fixedTime - TheCellGameMgr.instance.GetGameStartTime()}");
     }
 }

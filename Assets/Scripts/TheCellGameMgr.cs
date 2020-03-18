@@ -45,6 +45,10 @@ public class TheCellGameMgr : MonoBehaviour
     }
 
 
+    private int deadlyCellNb = 9;
+    private int effectCellNb = 7;
+
+
     // Gets the singleton instance.
     public static TheCellGameMgr instance { get; private set; }
 
@@ -65,7 +69,7 @@ public class TheCellGameMgr : MonoBehaviour
     {
         Debug.Log($"[GameMgr] Awake. {gameState}");
         //transform.position = new Vector3(-2.0f, 0.5f, 2.0f);
-        transform.position = new Vector3(0.0f, 0.0f, 5.0f);
+        transform.position = new Vector3(-0.5f, 0.0f, 5.25f);
 
         // add a sphere to represent the player     
         if (playerSphere == null)
@@ -84,6 +88,13 @@ public class TheCellGameMgr : MonoBehaviour
     void Start()
     {
         Debug.Log($"[GameMgr] Start. {gameState}");
+    }
+
+
+    // Return the time at which the game started with the current seed in seconds
+    public float GetGameStartTime()
+    {
+        return startingTime;
     }
 
 
@@ -110,11 +121,12 @@ public class TheCellGameMgr : MonoBehaviour
 
         playerCellId = 12; // replace the player in the middle
 
-        List<int> deadly = new List<int>(8);
-        while (deadly.Count < 8)
+        int reserveExit = 24; // make sure we'll always have a valid exit
+        List<int> deadly = new List<int>(deadlyCellNb);
+        while (deadly.Count < deadlyCellNb)
         {
             int id = (int)(Random.value * 24.0f);
-            if ((deadly.Contains(id)) || (id == 12))
+            if ((deadly.Contains(id)) || (id == 12) || (id == reserveExit))
             {
                 continue;
             }
@@ -129,11 +141,11 @@ public class TheCellGameMgr : MonoBehaviour
         Debug.Log($"[GameMgr] deadly {toto}");
 
 
-        List<int> effectCells = new List<int>(6);
-        while (effectCells.Count < 6)
+        List<int> effectCells = new List<int>(effectCellNb);
+        while (effectCells.Count < effectCellNb)
         {
             int id = (int)(Random.value * 24.0f);
-            if ((id == 12) || deadly.Contains(id) || effectCells.Contains(id))
+            if ((id == 12) || deadly.Contains(id) || effectCells.Contains(id) || (id == reserveExit))
             {
                 continue;
             }
@@ -184,8 +196,24 @@ public class TheCellGameMgr : MonoBehaviour
 
                 if ((i == 2) && (j == 2))
                 {
-                    cell.InitCell(CellTypes.Start, aRndNb);
+                    cell.InitCell(CellTypes.Start, 0, aRndNb);
                     playerSphere.transform.position = cell.transform.position + new Vector3(0.0f, 1.0f, 0.0f);
+                    continue;
+                }
+
+                // Choose deadly ones
+                if (deadly.Contains(id))
+                {
+                    int index = deadly.IndexOf(id);
+                    cell.InitCell(CellTypes.Deadly, index, aRndNb);
+                    continue;
+                }
+
+                // Choose effect ones
+                if (effectCells.Contains(id))
+                {
+                    int index = effectCells.IndexOf(id);
+                    cell.InitCell(CellTypes.Effect, index, aRndNb);
                     continue;
                 }
 
@@ -195,30 +223,16 @@ public class TheCellGameMgr : MonoBehaviour
                     if ((i == 0) || (j == 0) || (i == 4) || (j == 4) || ((i != 2) && (j != 2)))
                     {
                         exitCount++;
-                        if (exitCount >= (int)(aRndNb * 20.0f))
+                        if ((exitCount >= (int)(aRndNb * 20.0f)) || (id == 24))
                         {
-                            cell.InitCell(CellTypes.Exit, aRndNb);
+                            cell.InitCell(CellTypes.Exit, 0, aRndNb);
                             exitChosen = true;
                             continue;
                         }
                     }
                 }
 
-                // Choose deadly ones
-                if (deadly.Contains(id))
-                {
-                    cell.InitCell(CellTypes.Deadly, aRndNb);
-                    continue;
-                }
-
-                // Choose effect ones
-                if (effectCells.Contains(id))
-                {
-                    cell.InitCell(CellTypes.Effect, aRndNb);
-                    continue;
-                }
-
-                cell.InitCell(CellTypes.Safe, aRndNb);
+                cell.InitCell(CellTypes.Safe, 0, aRndNb);
             }
         }
 
@@ -231,7 +245,13 @@ public class TheCellGameMgr : MonoBehaviour
     {
         if (playerCellId > 4)
         {
+            OneCellClass current = GetCurrentCell();
+            current.OnPlayerExit();
+
             playerCellId -= 5;
+
+            current = GetCurrentCell();
+            current.OnPlayerEnter();
         }
     }
 
@@ -241,30 +261,48 @@ public class TheCellGameMgr : MonoBehaviour
     {
         if (playerCellId < 20)
         {
+            OneCellClass current = GetCurrentCell();
+            current.OnPlayerExit();
+
             playerCellId += 5;
+
+            current = GetCurrentCell();
+            current.OnPlayerEnter();
         }
     }
 
 
-    // Move the player position on the board to the north +X
+    // Move the player position on the board to the east +X
     void MovePlayerEast()
     {
         if (playerCellId % 5 == 4)
         {
             return;
         }
+        OneCellClass current = GetCurrentCell();
+        current.OnPlayerExit();
+
         playerCellId++;
+
+        current = GetCurrentCell();
+        current.OnPlayerEnter();
     }
 
 
-    // Move the player position on the board to the north -X
+    // Move the player position on the board to the west -X
     void MovePlayerWest()
     {
         if (playerCellId % 5 == 0)
         {
             return;
         }
+        OneCellClass current = GetCurrentCell();
+        current.OnPlayerExit();
+
         playerCellId--;
+
+        current = GetCurrentCell();
+        current.OnPlayerEnter();
     }
 
 
